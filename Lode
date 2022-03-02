@@ -1,0 +1,67 @@
+package com.company;
+
+import java.util.*;
+
+public class Main {
+
+    public static final String ANSI_RESET = "\u001B[0m";
+    public static final String ANSI_RED = "\u001B[31m";
+    public static final String ANSI_BLACK = "\u001B[30m";
+    public static final String ANSI_BLACK_BACKGROUND = "\u001B[40m";
+    public static final String ANSI_RED_BACKGROUND = "\u001B[41m";
+
+
+
+
+    public static void main(String[] args) {
+
+        Scanner scn1 = new Scanner(System.in);
+        String str = "";
+
+        System.out.println("Napis cislo sloupce kterej chces zvolit");
+
+        str = scn1.nextLine();
+        int number = 0;
+        int number2 = 0;
+
+        try{
+             number = Integer.parseInt(str);
+
+        }
+        catch (NumberFormatException ex){
+            ex.printStackTrace();
+        }
+
+        System.out.println("Napis cislo radku kterej chces zvolit");
+
+        str = scn1.nextLine();
+
+
+        try{
+            number2 = Integer.parseInt(str);
+
+        }
+        catch (NumberFormatException ex){
+            ex.printStackTrace();
+        }
+
+        int[][] pole = new int[][]{
+                {0, 0, 0, 0, 0, 0, 0, 1},
+                {0, 0, 0, 0, 0, 1, 0, 0},
+                {0, 0, 0, 0, 0, 1, 0, 0},
+                {0, 0, 1, 0, 0, 0, 0, 0},
+                {1, 0, 1, 0, 0, 0, 1, 0},
+                {1, 0, 0, 0, 0, 1, 1, 0},
+                {1, 0, 0, 0, 0, 0, 1, 0},
+                {1, 0, 0, 1, 0, 0, 0, 0},
+        };
+        int hodnota = pole[number][number2];
+
+        if (hodnota==1) {
+            System.out.println("Trefil jsi lod");
+        }
+        else if (hodnota==0) {
+            System.out.println("Nic si netrefil");
+        }
+    }
+}
