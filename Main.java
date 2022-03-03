@@ -19,6 +19,7 @@ public class Main {
     public static final String ANSI_BLACK = "\033[0;30m";
     public static final String ANSI_RED_BACKGROUND_BRIGHT = "\033[0;101m";
     public static final String ANSI_YELLOW_BOLD = "\033[1;33m";
+    public static final String ANSI_BLACK_BACKGROUND = "\033[40m";
 
     public static void main(String[] args) throws InterruptedException {
 
@@ -27,6 +28,9 @@ public class Main {
         int naboje = 25;
         int rip = 14;
         boolean jednou = true;
+        int cislaside = 1;
+
+
 
 
         int[][] pole = new int[8][8];
@@ -39,13 +43,18 @@ public class Main {
                 {1, 0, 1, 0, 0, 0, 1, 0},
                 {1, 0, 0, 0, 0, 1, 1, 0},
                 {1, 0, 0, 0, 0, 0, 1, 0},
-                {1, 0, 0, 1, 0, 0, 0, 0},};
+                {1, 0, 0, 1, 0, 0, 0, 0},
+        };
 
         while (naboje != 0 && rip > 0) {
 
+            System.out.println(ANSI_BLACK_BACKGROUND +"     A    B    C    D    E    F    G    H  "+ ANSI_RESET);
 
             for (int[] ints : pole) {
+                System.out.print(ANSI_BLACK_BACKGROUND +" " + cislaside + " "+ ANSI_RESET);
+                cislaside++;
                 for (int vypis : ints) {
+
                     if (vypis == 0) {
                         System.out.print(ANSI_BLUE_BRIGHT + ANSI_BLUE_BACKGROUND + "  " + vypis + "  " + ANSI_RESET);
                     } else if (vypis == 1) {
@@ -63,14 +72,12 @@ public class Main {
                 System.out.println("Napoveda : 0 je netrefená pozice, 1 je trefená loď, 2 je trefená voda");
                 jednou = false;
             }
-            System.out.println("Zadej řádek 1-8");
+            System.out.println("Zadej sloupec A-H a radek 1-8");
+            int[] vstup = safeSken();
+            radek = vstup[1];
 
-            radek = safeSken();
 
-
-            System.out.println("Zadej sloupec 1-8");
-
-            sloupec = safeSken();
+            sloupec = vstup[0];
             System.out.println();
             if (polelode[radek][sloupec] == 1) {
                 System.out.println(ANSI_GREEN + "Trefil jsi lod" + ANSI_RESET);
@@ -84,12 +91,13 @@ public class Main {
             } else if (polelode[radek][sloupec] == 2) {
                 System.out.println(ANSI_YELLOW_BOLD + "Sem jsi uz vystrelil je tu voda" + ANSI_RESET);
             } else if (polelode[radek][sloupec] == 3) {
-                System.out.println(ANSI_YELLOW_BOLD + "Sem uz jsi vystrelil je tu lod"+ ANSI_RESET);
+                System.out.println(ANSI_YELLOW_BOLD + "Sem uz jsi vystrelil je tu lod" + ANSI_RESET);
             }
             naboje--;
             System.out.println("Mas " + naboje + " Naboju");
             System.out.println("Zbyva ti sestrelis " + rip + " lodi");
             System.out.println("Napoveda : 0 je netrefená pozice, 1 je trefená loď, 2 je trefená voda");
+            cislaside = 1;
             Thread.sleep(3000);
 
         }
@@ -102,26 +110,31 @@ public class Main {
         }
     }
 
-    static int safeSken() {
+    static int[] safeSken() {
         Scanner sken = new Scanner(System.in);
-        int a = 0;
-        while (true) {
-            try {
-                a = sken.nextInt();
-                a--;
-                if (a < 0 || a > 7) {
-                    System.out.println("Povolený input je 1-8. Zkus to znovu.");
-                    continue;
-                }
-                break;
-            } catch (Exception e) {
-                sken.nextLine();
-                System.out.println("Zadal jsi String, double, nebo příliš velké číslo. Zkus to znovu.");
-            }
+        String input = sken.nextLine();
+        if (input.length() == 2) {
+
+            List<String> radky = Arrays.asList(
+                    "1", "2", "3", "4", "5", "6", "7", "8"
+            );
+            List<String> sloupce = Arrays.asList(
+                    "A", "B", "C", "D", "E", "F", "G", "H"
+            );
+            char zradek = input.charAt(1);
+            char zsloupec = input.charAt(0);
+            int iradek = radky.indexOf(String.valueOf(zradek));
+            int isloupec = sloupce.indexOf(String.valueOf(zsloupec));
+            int[] result = new int[]{
+                    isloupec, iradek
+            };
+            return result;
+
         }
-        return a;
+        else {
+            System.out.println("Musis zadat dva znaky nebo jsi neco zadal spatne");
+        }
+            return new int[0];
     }
-
-
 }
 
