@@ -128,7 +128,7 @@ public class Main {
             System.out.println("Nápověda : " + ANSI_WHITE + "0 je nezasažená pozice," + ANSI_RESET + ANSI_GREEN_BRIGHT + " 1 je zasažená loď," + ANSI_RESET + ANSI_YELLOW_BOLD + " 2 je zasažená voda" + ANSI_RESET);
         }
         if (rip == 0 && naboje == 0) {
-            System.out.println(ANSI_GREEN + "KLAAAČ sestřelil jsi poslední loď na poslední náboj" + ANSI_RESET);
+            System.out.println(ANSI_GREEN_BRIGHT + "KLAAAČ sestřelil jsi poslední loď na poslední náboj" + ANSI_RESET);
         } else if (rip == 0) {
             System.out.println(ANSI_GREEN + "Vyhrávaš sestřelil jsi všechny lodě v zasobníku ti zbýva" + naboje + ANSI_RESET);
         } else if (naboje == 0) {
