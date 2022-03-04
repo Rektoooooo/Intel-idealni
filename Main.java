@@ -1,14 +1,16 @@
 package com.company;
 
+import java.lang.reflect.Array;
 import java.util.*;
 
 
 public class Main {
 
+    static ArrayList<Integer> ahoj = new ArrayList<>();
+
     public static final String ANSI_RESET = "\u001B[0m";
     public static final String ANSI_RED = "\033[0;31m";
     public static final String ANSI_RED_BACKGROUND = "\033[41m";
-    public static final String ANSI_GREEN = "\033[0;32m";
     public static final String ANSI_GREEN_BRIGHT = "\033[0;92m";
     public static final String ANSI_GREEN_BACKGROUND = "\033[42m";
     public static final String ANSI_BLUE_BACKGROUND = "\033[44m";
@@ -26,7 +28,9 @@ public class Main {
         int rip = 14;
         boolean jednou = true;
         int cislaside = 1;
-
+        int lode = 0;
+        boolean l1 = false;
+        int slode = 6;
 
         String[][] pole = new String[][]{
                 {"-", "-", "-", "-", "-", "-", "-", "-"},
@@ -40,14 +44,14 @@ public class Main {
         };
 
         int[][] polelode = new int[][]{
-                {0, 0, 0, 0, 0, 0, 0, 1},
-                {0, 0, 0, 0, 0, 1, 0, 0},
-                {0, 0, 0, 0, 0, 1, 0, 0},
-                {0, 0, 1, 0, 0, 0, 0, 0},
-                {1, 0, 1, 0, 0, 0, 1, 0},
-                {1, 0, 0, 0, 0, 1, 1, 0},
-                {1, 0, 0, 0, 0, 0, 1, 0},
-                {1, 0, 0, 1, 0, 0, 0, 0},
+                {0, 0, 0, 0, 0, 0, 0, 5},
+                {0, 0, 0, 0, 0, 4, 0, 0},
+                {0, 0, 0, 0, 0, 4, 0, 0},
+                {0, 0, 8, 0, 0, 0, 0, 0},
+                {1, 0, 8, 0, 0, 0, 7, 0},
+                {1, 0, 0, 0, 0, 7, 7, 0},
+                {1, 0, 0, 0, 0, 0, 7, 0},
+                {1, 0, 0, 6, 0, 0, 0, 0},
         };
 
         while (naboje != 0 && rip > 0) {
@@ -79,15 +83,32 @@ public class Main {
             System.out.println("Zadej sloupec A-H a řádek 1-8");
             int[] vstup = safeSken();
             radek = vstup[1];
-
-
             sloupec = vstup[0];
             System.out.println();
-            if (polelode[radek][sloupec] == 1) {
-                System.out.println(ANSI_GREEN_BRIGHT + "Zasáhl jsi loď" + ANSI_RESET);
+            lode = polelode[radek][sloupec];
+            if (lode == 1 || lode == 7 || lode == 8 || lode == 4 || lode == 5 || lode == 6) {
+                System.out.println(ANSI_GREEN_BRIGHT + "Zasáhl jsi část lodě" + ANSI_RESET);
                 polelode[radek][sloupec] = 3;
                 pole[radek][sloupec] = "O";
+
+                loop:
+                for (int[] j : polelode) {
+                    for (int k : j) {
+                        if (k == lode) {
+                            l1 = true;
+                            break loop;
+
+                        }
+                    }
+                }
+                if (!l1 && vsesestrelene(lode)) {
+                    System.out.println(ANSI_GREEN_BRIGHT + "Sestřelil jsi celou loď" + ANSI_RESET);
+                    slode--;
+                }
+
+
                 rip--;
+                l1 = false;
             } else if (polelode[radek][sloupec] == 0) {
                 System.out.println(ANSI_RED + "Nic si nezasáhl" + ANSI_RESET);
                 polelode[radek][sloupec] = 2;
@@ -100,20 +121,16 @@ public class Main {
             naboje--;
             if (naboje >= 18) {
                 System.out.println(ANSI_GREEN_BRIGHT + "Máš " + naboje + " nábojů" + ANSI_RESET);
-            }
-            else if (naboje >= 10) {
+            } else if (naboje >= 10) {
                 System.out.println(ANSI_YELLOW_BRIGHT + "Máš " + naboje + " nábojů" + ANSI_RESET);
-            }
-            else {
+            } else {
                 System.out.println(ANSI_RED + "Máš " + naboje + " nábojů" + ANSI_RESET);
             }
             if (rip >= 10) {
-                System.out.println(ANSI_RED + "Zbýva ti sestřelit " + rip + " lodí" + ANSI_RESET);
-            }
-            else if (rip >= 5) {
+                System.out.println(ANSI_RED + "Zbýva ti sestřelit " + slode + " lodí které se skládají z " + rip + " částí" + ANSI_RESET);
+            } else if (rip >= 5) {
                 System.out.println(ANSI_YELLOW_BRIGHT + "Zbýva ti sestřelit " + rip + " lodí" + ANSI_RESET);
-            }
-            else {
+            } else {
                 System.out.println(ANSI_GREEN_BRIGHT + "Zbýva ti sestřelit " + rip + " lodí" + ANSI_RESET);
             }
             cislaside = 1;
@@ -130,7 +147,7 @@ public class Main {
         if (rip == 0 && naboje == 0) {
             System.out.println(ANSI_GREEN_BRIGHT + "KLAAAČ sestřelil jsi poslední loď na poslední náboj" + ANSI_RESET);
         } else if (rip == 0) {
-            System.out.println(ANSI_GREEN + "Vyhrávaš sestřelil jsi všechny lodě v zasobníku ti zbýva" + naboje + ANSI_RESET);
+            System.out.println(ANSI_GREEN_BRIGHT + "Vyhrávaš sestřelil jsi všechny lodě v zasobníku ti zbýva " + naboje + "nabojů" + ANSI_RESET);
         } else if (naboje == 0) {
             System.out.println(ANSI_RED + "Došli ti náboje zbývalo ti sestřelit " + rip + " lodí prohráváš" + ANSI_RESET);
         }
@@ -163,8 +180,7 @@ public class Main {
                         fix++;
                     }
                 }
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 fix = 0;
                 System.out.println(ANSI_RED + "Zadal jsi neplatné souřadnice." + ANSI_RESET + ANSI_YELLOW_BRIGHT + " Zkus to znovu." + ANSI_RESET);
                 continue;
@@ -191,5 +207,15 @@ public class Main {
                 System.out.println(ANSI_RED + "Zadal jsi neplatné souřadnice." + ANSI_RESET + ANSI_YELLOW_BRIGHT + " Zkus to znovu." + ANSI_RESET);
             }
         }
+    }
+
+    static boolean vsesestrelene(int xd) {
+        for (int h : ahoj) {
+            if (h == xd) {
+                return false;
+            }
+        }
+        ahoj.add(xd);
+        return true;
     }
 }
