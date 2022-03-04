@@ -77,10 +77,10 @@ public class Main {
             }
             System.out.println();
             if (jednou) {
-                System.out.println("Nápověda : " + ANSI_WHITE + "0 je nezasažená pozice," + ANSI_RESET + ANSI_GREEN_BRIGHT + " 1 je zasažená loď," + ANSI_RESET + ANSI_YELLOW_BOLD + " 2 je zasažená voda" + ANSI_RESET);
+                System.out.println("Nápověda : " + ANSI_WHITE + "- je nezasažená pozice," + ANSI_RESET + ANSI_GREEN_BRIGHT + " O je zasažená loď," + ANSI_RESET + ANSI_RED + " X je zasažená voda" + ANSI_RESET);
                 jednou = false;
             }
-            System.out.println("Zadej sloupec A-H a řádek 1-8");
+            System.out.println("Zadej sloupec A-H a řádek 1-8 například : " + ANSI_GREEN_BRIGHT + "(A7)"+ ANSI_RESET);
             int[] vstup = safeSken();
             radek = vstup[1];
             sloupec = vstup[0];
@@ -141,8 +141,9 @@ public class Main {
             System.out.println(ANSI_YELLOW_BRIGHT + "66%" + ANSI_RESET);
             Thread.sleep(1000);
             System.out.println(ANSI_GREEN_BRIGHT + "99%" + ANSI_RESET);
+            Thread.sleep(1000);
 
-            System.out.println("Nápověda : " + ANSI_WHITE + "0 je nezasažená pozice," + ANSI_RESET + ANSI_GREEN_BRIGHT + " 1 je zasažená loď," + ANSI_RESET + ANSI_YELLOW_BOLD + " 2 je zasažená voda" + ANSI_RESET);
+            System.out.println("Nápověda : " + ANSI_WHITE + "- je nezasažená pozice," + ANSI_RESET + ANSI_GREEN_BRIGHT + " O je zasažená loď," + ANSI_RESET + ANSI_RED + " X je zasažená voda" + ANSI_RESET);
         }
         if (rip == 0 && naboje == 0) {
             System.out.println(ANSI_GREEN_BRIGHT + "KLAAAČ sestřelil jsi poslední loď na poslední náboj" + ANSI_RESET);
