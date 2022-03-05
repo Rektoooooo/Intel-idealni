@@ -19,18 +19,20 @@ public class Main {
     public static final String ANSI_YELLOW_BRIGHT = "\033[0;93m";
     public static final String ANSI_BLACK_BACKGROUND = "\033[40m";
     public static final String ANSI_WHITE = "\033[0;37m";
+    public static final String ANSI_YELLOW_BACKGROUND_BRIGHT = "\033[0;103m";
 
     public static void main(String[] args) throws InterruptedException {
 
         int sloupec = 0;
         int radek = 0;
-        int naboje = 25;
+        int naboje = 15;
         int rip = 14;
         boolean jednou = true;
         int cislaside = 1;
         int lode = 0;
         boolean l1 = false;
         int slode = 6;
+        boolean napoveda = true;
 
         String[][] pole = new String[][]{
                 {"-", "-", "-", "-", "-", "-", "-", "-"},
@@ -43,6 +45,17 @@ public class Main {
                 {"-", "-", "-", "-", "-", "-", "-", "-"}
         };
 
+        String[][] polespravne = new String[][]{
+                {"-", "-", "-", "-", "-", "-", "-", "M"},
+                {"-", "-", "-", "-", "-", "M", "-", "-"},
+                {"-", "-", "-", "-", "-", "M", "-", "-"},
+                {"-", "-", "M", "-", "-", "-", "-", "-"},
+                {"M", "-", "M", "-", "-", "-", "M", "-"},
+                {"M", "-", "-", "-", "-", "M", "M", "-"},
+                {"M", "-", "-", "-", "-", "-", "M", "-"},
+                {"M", "-", "-", "M", "-", "-", "-", "-"}
+        };
+
         int[][] polelode = new int[][]{
                 {0, 0, 0, 0, 0, 0, 0, 5},
                 {0, 0, 0, 0, 0, 4, 0, 0},
@@ -53,8 +66,7 @@ public class Main {
                 {1, 0, 0, 0, 0, 0, 7, 0},
                 {1, 0, 0, 6, 0, 0, 0, 0},
         };
-
-        while (naboje != 0 && rip > 0) {
+        while (naboje != 0 && naboje >= rip && rip > 0) {
 
             System.out.println(ANSI_BLACK_BACKGROUND + "     A    B    C    D    E    F    G    H  " + ANSI_RESET);
 
@@ -90,6 +102,7 @@ public class Main {
                 System.out.println(ANSI_GREEN_BRIGHT + "Zasáhl jsi část lodě" + ANSI_RESET);
                 polelode[radek][sloupec] = 3;
                 pole[radek][sloupec] = "O";
+                polespravne[radek][sloupec] = "O";
 
                 loop:
                 for (int[] j : polelode) {
@@ -113,6 +126,7 @@ public class Main {
                 System.out.println(ANSI_RED + "Nic si nezasáhl" + ANSI_RESET);
                 polelode[radek][sloupec] = 2;
                 pole[radek][sloupec] = "X";
+                polespravne[radek][sloupec] = "X";
             } else if (polelode[radek][sloupec] == 2) {
                 System.out.println(ANSI_YELLOW_BOLD + "Sem jsi už vystřelil je tu voda" + ANSI_RESET);
             } else if (polelode[radek][sloupec] == 3) {
@@ -138,19 +152,60 @@ public class Main {
             Thread.sleep(1000);
             System.out.println(ANSI_RED + "33%" + ANSI_RESET);
             Thread.sleep(1000);
-            System.out.println(ANSI_YELLOW_BRIGHT + "66%" + ANSI_RESET);
+            System.out.println(ANSI_YELLOW_BRIGHT + "+ \033[F" + "66%" + ANSI_RESET);
             Thread.sleep(1000);
-            System.out.println(ANSI_GREEN_BRIGHT + "99%" + ANSI_RESET);
+            System.out.println(ANSI_GREEN_BRIGHT + "+ \033[F" + "99%" + ANSI_RESET);
             Thread.sleep(1000);
-
-            System.out.println("Nápověda : " + ANSI_WHITE + "- je nezasažená pozice," + ANSI_RESET + ANSI_GREEN_BRIGHT + " O je zasažená loď," + ANSI_RESET + ANSI_RED + " X je zasažená voda" + ANSI_RESET);
+              if (napoveda == true) {
+                  System.out.println("Nápověda : " + ANSI_WHITE + "- je nezasažená pozice," + ANSI_RESET + ANSI_GREEN_BRIGHT + " O je zasažená loď," + ANSI_RESET + ANSI_RED + " X je zasažená voda" + ANSI_RESET);
+              }
+              if (naboje == rip) {
+                  napoveda = false;
+              }
         }
         if (rip == 0 && naboje == 0) {
             System.out.println(ANSI_GREEN_BRIGHT + "KLAAAČ sestřelil jsi poslední loď na poslední náboj" + ANSI_RESET);
         } else if (rip == 0) {
-            System.out.println(ANSI_GREEN_BRIGHT + "Vyhrávaš sestřelil jsi všechny lodě v zasobníku ti zbýva " + naboje + "nabojů" + ANSI_RESET);
-        } else if (naboje == 0) {
+            System.out.println(ANSI_GREEN_BRIGHT + "Vyhrávaš sestřelil jsi všechny lodě v zasobníku ti zbýva " + naboje + " nabojů" + ANSI_RESET);
+        } else if (naboje < rip) {
             System.out.println(ANSI_RED + "Došli ti náboje zbývalo ti sestřelit " + rip + " lodí prohráváš" + ANSI_RESET);
+            System.out.println("Nápověda : " + ANSI_WHITE + "- je nezasažená pozice," + ANSI_RESET + ANSI_GREEN_BRIGHT + " O je zasažená loď," + ANSI_RESET + ANSI_RED + " X je zasažená voda," + ANSI_RESET + ANSI_YELLOW_BOLD + " M jsou zbývajcí lodě který si nesestřelil"+ ANSI_RESET);
+            System.out.println("Mapa Hry :");
+            System.out.println();
+            System.out.println(ANSI_BLACK_BACKGROUND + "     A    B    C    D    E    F    G    H  " + ANSI_RESET);
+
+            for (String[] strings : polespravne) {
+                System.out.print(ANSI_BLACK_BACKGROUND + " " + cislaside + " " + ANSI_RESET);
+                cislaside++;
+                for (String vypiss : strings) {
+
+                    if (vypiss == "-") {
+                        System.out.print(ANSI_BLACK + ANSI_BLUE_BACKGROUND + "  " + vypiss + "  " + ANSI_RESET);
+                    } else if (vypiss == "O") {
+                        System.out.print(ANSI_GREEN_BRIGHT + ANSI_GREEN_BACKGROUND + "  " + vypiss + "  " + ANSI_RESET);
+                    } else if (vypiss == "X") {
+                        System.out.print(ANSI_RED_BACKGROUND + "  " + vypiss + "  " + ANSI_RESET);
+                    }
+                      else if (vypiss == "M") {
+                    System.out.print(ANSI_YELLOW_BOLD + ANSI_YELLOW_BACKGROUND_BRIGHT + "  " + vypiss + "  " + ANSI_RESET);
+                }
+                    else {
+                        System.out.print("  " + vypiss + "  ");
+                    }
+                }
+                System.out.println();
+            }
+
+
+
+
+
+
+
+
+
+
+
         }
     }
 
